@@ -56,7 +56,7 @@ func dataIsValid(data []float64) bool {
 		diff := data[i] - data[i-1]
 
 		// Check if the difference is within the allowed range using math.Abs
-		if math.Abs(float64(diff)) < 1 || math.Abs(float64(diff)) > 3 {
+		if diff == 0 || math.Abs(float64(diff)) > treshold {
 			return false
 		}
 

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math"
 	"os"
-	"sort"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -30,8 +30,8 @@ func main() {
 		col2 = append(col2, num2)
 	}
 
-	sort.Float64s(col1)
-	sort.Float64s(col2)
+	slices.Sort(col1)
+	slices.Sort(col2)
 
 	sum := sumColumns(col1, col2)
 

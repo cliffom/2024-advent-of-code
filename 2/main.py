@@ -16,19 +16,32 @@ def convert_data(data: list):
 # meets the following criteria:
 # - The numbers are either all increasing or decreasing
 # - Any two adjacent levels differ by at least one and at most three
+# - Removing any 1 item makes the above true
 def data_is_valid(data: list):
     threshold = 3
-    diffs = [data[i] - data[i - 1] for i in range(1, len(data))]
 
-    # Determine the trend: increasing or decreasing
-    increasing = diffs[0] > 0
+    def is_valid(data):
+        diffs = [data[i] - data[i - 1] for i in range(1, len(data))]
+        if len(diffs) == 0:  # A single element list is valid
+            return True
+        increasing = diffs[0] > 0
+        return all(
+            0 < abs(diff) <= threshold
+            and (increasing and diff > 0 or not increasing and diff < 0)
+            for diff in diffs
+        )
 
-    # Validate all conditions
-    return all(
-        0 < abs(diff) <= threshold
-        and (increasing and diff > 0 or not increasing and diff < 0)
-        for diff in diffs
-    )
+    # Check if the list is already valid
+    if is_valid(data):
+        return True
+
+    # Try removing each element and validate
+    for i in range(len(data)):
+        temp_data = data[:i] + data[i + 1 :]
+        if is_valid(temp_data):
+            return True
+
+    return False
 
 
 def main():

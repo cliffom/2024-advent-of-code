@@ -1,6 +1,5 @@
 import os
 
-# Define the delimiter
 DELIMITER = "   "
 
 def sum_columns(col1, col2):

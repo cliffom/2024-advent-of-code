@@ -22,7 +22,7 @@ func main() {
 
 		parts := strings.Split(line, delimiter)
 		data := convertData(parts)
-		if validateData(data) {
+		if dataIsValid(data) {
 			validLines++
 		}
 	}
@@ -43,11 +43,11 @@ func convertData(data []string) []float64 {
 	return floats
 }
 
-// validateData verifies that for the data in an array of ints
+// dataIsValid verifies that for the data in an array of ints
 // meets the following criteria:
 // - The numbers are either all increasing or decreasing
 // - Any two adjacent levels differ by at least one and at most three
-func validateData(data []float64) bool {
+func dataIsValid(data []float64) bool {
 	const treshold = 3
 
 	// Determine the trend: increasing or decreasing

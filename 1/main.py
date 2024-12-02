@@ -16,8 +16,8 @@ def main():
     with open("input.txt", "r") as file:
         for line in file:
             parts = line.strip().split(DELIMITER)
-            num1 = int(parts[0].strip())
-            num2 = int(parts[1].strip())
+            num1 = int(parts[0])
+            num2 = int(parts[1])
 
             col1.append(num1)
             col2.append(num2)

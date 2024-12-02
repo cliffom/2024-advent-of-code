@@ -2,11 +2,13 @@ import os
 
 DELIMITER = "   "
 
+
 def sum_columns(col1, col2):
     total = 0
     for num1, num2 in zip(col1, col2):
         total += abs(num1 - num2)
     return total
+
 
 def get_similarity_score(column1, column2):
     count_map = {}
@@ -41,6 +43,7 @@ def main():
     similarity_score = get_similarity_score(col1, col2)
     print(result)
     print(similarity_score)
+
 
 if __name__ == "__main__":
     main()

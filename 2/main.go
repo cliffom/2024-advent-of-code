@@ -43,7 +43,7 @@ func convertData(data []string) []float64 {
 	return floats
 }
 
-// dataIsValid verifies that for the data in an array of ints
+// dataIsValid verifies that the data in an array of numbers
 // meets the following criteria:
 // - The numbers are either all increasing or decreasing
 // - Any two adjacent levels differ by at least one and at most three
@@ -55,7 +55,7 @@ func dataIsValid(data []float64) bool {
 	for i := 1; i < len(data); i++ {
 		diff := data[i] - data[i-1]
 
-		// Check if the difference is within the allowed range using math.Abs
+		// Check for a difference and that it is within the allowed range
 		if diff == 0 || math.Abs(float64(diff)) > treshold {
 			return false
 		}

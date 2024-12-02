@@ -34,8 +34,10 @@ func main() {
 	slices.Sort(col2)
 
 	sum := sumColumns(col1, col2)
+	similarityScore := similarityScore(col1, col2)
 
 	fmt.Printf("%.0f\n", sum)
+	fmt.Printf("%.0f\n", similarityScore)
 }
 
 func sumColumns(column1, column2 []float64) float64 {
@@ -44,4 +46,21 @@ func sumColumns(column1, column2 []float64) float64 {
 		sum += math.Abs(column1[i] - column2[i])
 	}
 	return sum
+}
+
+func similarityScore(column1, column2 []float64) float64 {
+	var score float64
+	for i := range column1 {
+		count := 0
+		for j := range column2 {
+			if column1[i] == column2[j] {
+				count++
+			}
+		}
+		if count > 0 {
+			score += column1[i] * float64(count)
+		}
+	}
+
+	return score
 }

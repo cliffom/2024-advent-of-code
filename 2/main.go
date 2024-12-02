@@ -17,6 +17,7 @@ func main() {
 
 	scanner := bufio.NewScanner(file)
 	validLines := 0
+	canBeValidLines := 0
 	for scanner.Scan() {
 		line := scanner.Text()
 
@@ -24,10 +25,13 @@ func main() {
 		data := convertData(parts)
 		if dataIsValid(data) {
 			validLines++
+		} else if dataCanBeValid(data) {
+			canBeValidLines++
 		}
 	}
 
-	fmt.Println(validLines)
+	fmt.Printf("Total valid lines: %v\n", validLines)
+	fmt.Printf("Total valid and can be valid lines: %v\n", validLines+canBeValidLines)
 }
 
 // convertData takes an array of strings and returns an array of []float64s
@@ -67,4 +71,21 @@ func dataIsValid(data []float64) bool {
 	}
 
 	return true
+}
+
+// dataCanBeValid checks if removing one element can make the data valid
+func dataCanBeValid(data []float64) bool {
+	for i := range data {
+		// Create a new slice by skipping the element at index i
+		tempData := make([]float64, len(data)-1)
+		copy(tempData, data[:i])       // Copy the part before the skipped element
+		copy(tempData[i:], data[i+1:]) // Copy the part after the skipped element
+
+		// Check if the resulting slice is valid
+		if dataIsValid(tempData) {
+			return true
+		}
+	}
+
+	return false
 }

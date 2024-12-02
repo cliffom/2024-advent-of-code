@@ -1,6 +1,5 @@
-import os
-
 DELIMITER = " "
+
 
 # convert_data takes a list of strings and returns an list of float64s
 # we assume the input data is clean and everything can be cast properly
@@ -11,6 +10,7 @@ def convert_data(data: list):
         data_converted.append(number)
 
     return data_converted
+
 
 # data_is_valid verifies that the data in a list of numbers
 # meets the following criteria:
@@ -25,8 +25,8 @@ def data_is_valid(data: list):
 
     # Validate all conditions
     return all(
-        0 < abs(diff) <= threshold and
-        (increasing and diff > 0 or not increasing and diff < 0)
+        0 < abs(diff) <= threshold
+        and (increasing and diff > 0 or not increasing and diff < 0)
         for diff in diffs
     )
 
@@ -42,6 +42,7 @@ def main():
                 valid_lines += 1
 
     print(valid_lines)
+
 
 if __name__ == "__main__":
     main()

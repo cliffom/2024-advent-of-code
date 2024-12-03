@@ -17,8 +17,7 @@ def get_similarity_score(column1, column2):
 
     score = 0
     for value in column1:
-        if value in count_map:
-            score += value * count_map[value]
+        score += count_map.get(value, 0) * value
 
     return score
 

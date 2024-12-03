@@ -76,12 +76,12 @@ func dataIsValid(data []float64) bool {
 // dataCanBeValid checks if removing one element can make the data valid
 func dataCanBeValid(data []float64) bool {
 	for i := range data {
-		// Create a new slice by skipping the element at index i
+		// Make a new, temporary slice that consists of the elements
+		// before and after the current element
 		tempData := make([]float64, len(data)-1)
-		copy(tempData, data[:i])       // Copy the part before the skipped element
-		copy(tempData[i:], data[i+1:]) // Copy the part after the skipped element
+		copy(tempData, data[:i])
+		copy(tempData[i:], data[i+1:])
 
-		// Check if the resulting slice is valid
 		if dataIsValid(tempData) {
 			return true
 		}

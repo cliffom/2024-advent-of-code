@@ -35,7 +35,7 @@ def sum_of_valid_refined_instructions(data: str) -> int:
     matches = [(m.start(), m.end(), *m.groups()) for m in pattern.finditer(data)]
 
     result = []
-    for start, end, num1, num2 in matches:
+    for start, _, num1, num2 in matches:
         substr = data[:start]
         if "don't" not in substr or substr.rfind("don't") < substr.rfind("do"):
             result.append((int(num1), int(num2)))

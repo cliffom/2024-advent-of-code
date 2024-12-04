@@ -32,7 +32,7 @@ func readGridFromFile(filename string) [][]rune {
 	return grid
 }
 
-func countWord(grid [][]rune, word string) int {
+func countWordOccurrencesInGrid(grid [][]rune, word string) int {
 	wordRunes := []rune(word)
 	wordLen := len(wordRunes)
 	rows := len(grid)
@@ -64,8 +64,7 @@ func countWord(grid [][]rune, word string) int {
 	return count
 }
 
-// Function to count the "MAS" X-pattern in the grid
-func countXPattern(grid [][]rune) int {
+func countOccurrencesInXPattern(grid [][]rune) int {
 	rows := len(grid)
 	cols := len(grid[0])
 	count := 0
@@ -73,16 +72,8 @@ func countXPattern(grid [][]rune) int {
 	for r := 1; r < rows-1; r++ {
 		for c := 1; c < cols-1; c++ {
 			if string(grid[r][c]) == "A" {
-				// Check corners for S an M
-				upper_left := string(grid[r-1][c-1])
-				upper_right := string(grid[r-1][c+1])
-				lower_left := string(grid[r+1][c-1])
-				lower_right := string(grid[r+1][c+1])
-				if (upper_left == "M" && lower_right == "S") && (upper_right == "M" && lower_left == "S") ||
-					(upper_left == "S" && lower_right == "M") && (upper_right == "S" && lower_left == "M") ||
-					(upper_left == "M" && lower_right == "S") && (upper_right == "S" && lower_left == "M") ||
-					(upper_left == "S" && lower_right == "M") && (upper_right == "M" && lower_left == "S") {
-					count++
+				if diagLeft(r, c, grid) && diagRight(r, c, grid) {
+					count += 1
 				}
 			}
 
@@ -92,13 +83,37 @@ func countXPattern(grid [][]rune) int {
 	return count
 }
 
+func diagLeft(x, y int, grid [][]rune) bool {
+	upper_right := string(grid[x-1][y+1])
+	lower_left := string(grid[x+1][y-1])
+	if (upper_right == "M" && lower_left == "S") ||
+		(upper_right == "S" && lower_left == "M") {
+
+		return true
+	}
+
+	return false
+}
+
+func diagRight(x, y int, grid [][]rune) bool {
+	upper_left := string(grid[x-1][y-1])
+	lower_right := string(grid[x+1][y+1])
+	if (upper_left == "M" && lower_right == "S") ||
+		(upper_left == "S" && lower_right == "M") {
+
+		return true
+	}
+
+	return false
+}
+
 func main() {
 	filename := "input.txt"
 	grid := readGridFromFile(filename)
 
 	word := "XMAS"
-	result := countWord(grid, word)
-	result2 := countXPattern(grid)
+	result := countWordOccurrencesInGrid(grid, word)
+	result2 := countOccurrencesInXPattern(grid)
 	fmt.Printf("The word '%s' appears %d times in the grid.\n", word, result)
 	fmt.Printf("The word '%s' appears in an X-pattern %d times in the grid.\n", "MAS", result2)
 }

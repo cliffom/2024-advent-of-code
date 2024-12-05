@@ -32,7 +32,7 @@ func readGridFromFile(filename string) [][]rune {
 	return grid
 }
 
-func countWordOccurrencesInGrid(grid [][]rune, word string) int {
+func countWordOccurrencesInGrid(word string, grid [][]rune) int {
 	wordRunes := []rune(word)
 	wordLen := len(wordRunes)
 	rows := len(grid)
@@ -122,8 +122,9 @@ func main() {
 	grid := readGridFromFile(filename)
 
 	word := "XMAS"
-	result := countWordOccurrencesInGrid(grid, word)
+	result := countWordOccurrencesInGrid(word, grid)
 	result2 := countOccurrencesInXPattern(grid)
+
 	fmt.Printf("The word '%s' appears %d times in the grid.\n", word, result)
 	fmt.Printf("The word '%s' appears in an X-pattern %d times in the grid.\n", "MAS", result2)
 }

@@ -48,7 +48,7 @@ func countWordOccurrencesInGrid(word string, grid [][]rune) int {
 				for i := 0; i < wordLen; i++ {
 					next_row, next_col := row+x*i, col+y*i
 
-					if !withinBounds(rows, cols, next_row, next_col) ||
+					if !withinBounds(next_row, next_col, rows, cols) ||
 						grid[next_row][next_col] != wordRunes[i] {
 
 						found = false
@@ -66,7 +66,7 @@ func countWordOccurrencesInGrid(word string, grid [][]rune) int {
 	return count
 }
 
-func withinBounds(rows, cols, next_row, next_col int) bool {
+func withinBounds(next_row, next_col, rows, cols int) bool {
 	if next_row < 0 || next_col < 0 || next_row >= rows || next_col >= cols {
 		return false
 	}

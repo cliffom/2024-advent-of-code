@@ -39,16 +39,18 @@ func countWordOccurrencesInGrid(grid [][]rune, word string) int {
 	cols := len(grid[0])
 	count := 0
 
-	for r := 0; r < rows; r++ {
-		for c := 0; c < cols; c++ {
-			// Check in all directions
+	for row := 0; row < rows; row++ {
+		for col := 0; col < cols; col++ {
 			for _, dir := range directions {
-				dr, dc := dir[0], dir[1]
+				x, y := dir[0], dir[1]
 				found := true
 
 				for i := 0; i < wordLen; i++ {
-					nr, nc := r+dr*i, c+dc*i
-					if nr < 0 || nr >= rows || nc < 0 || nc >= cols || grid[nr][nc] != wordRunes[i] {
+					next_row, next_col := row+x*i, col+y*i
+
+					if !withinBounds(rows, cols, next_row, next_col) ||
+						grid[next_row][next_col] != wordRunes[i] {
+
 						found = false
 						break
 					}
@@ -62,6 +64,14 @@ func countWordOccurrencesInGrid(grid [][]rune, word string) int {
 	}
 
 	return count
+}
+
+func withinBounds(rows, cols, next_row, next_col int) bool {
+	if next_row < 0 || next_col < 0 || next_row >= rows || next_col >= cols {
+		return false
+	}
+
+	return true
 }
 
 func countOccurrencesInXPattern(grid [][]rune) int {

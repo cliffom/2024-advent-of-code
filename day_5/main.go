@@ -49,16 +49,21 @@ func getUpdateData(data string) []int {
 func main() {
 	orderingRules, updates := readInputFromFile("input.txt")
 
-	sum := 0
+	var sumValid, sumInvalid int
 	for _, update := range updates {
 		updateIsValid := validateUpdate(update, orderingRules)
 		if updateIsValid {
 			middlePageNumber := (len(update) / 2)
-			sum += update[middlePageNumber]
+			sumValid += update[middlePageNumber]
+		} else {
+			correctedUpdate := correctInvalidUpdate(update, orderingRules)
+			middlePageNumber := (len(correctedUpdate) / 2)
+			sumInvalid += correctedUpdate[middlePageNumber]
 		}
 	}
 
-	log.Printf("The sum of the middle page numbers is: %v", sum)
+	log.Printf("The sum of the middle page numbers for valid entries is: %v", sumValid)
+	log.Printf("The sum of the middle page numbers for invalid entries is: %v", sumInvalid)
 }
 
 func validateUpdate(update []int, orderingRules [][2]int) bool {
@@ -81,4 +86,27 @@ func validateUpdate(update []int, orderingRules [][2]int) bool {
 	}
 
 	return updateIsValid
+}
+
+func correctInvalidUpdate(update []int, orderingRules [][2]int) []int {
+	var repairUpdate func(update []int, index int) []int
+
+	repairUpdate = func(update []int, index int) []int {
+		if index >= len(update)-1 {
+			return update
+		}
+
+		ruleToValidateReversed := [2]int{update[index+1], update[index]}
+
+		for _, rule := range orderingRules {
+			if ruleToValidateReversed == rule {
+				update[index], update[index+1] = update[index+1], update[index]
+				return repairUpdate(update, 0)
+			}
+		}
+
+		return repairUpdate(update, index+1)
+	}
+
+	return repairUpdate(update, 0) // Start the recursion
 }

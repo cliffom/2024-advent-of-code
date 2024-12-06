@@ -45,7 +45,9 @@ func main() {
 	guard := Guard{
 		CurrentDirection: Up,
 		CurrentPosition:  startPos,
-		AreaMap:          areaMap,
+		Map: AreaMap{
+			Contents: areaMap,
+		},
 	}
 
 	for !guard.ExitedArea() {
@@ -53,7 +55,7 @@ func main() {
 	}
 
 	distinctGuardPositions := 0
-	for _, rows := range guard.AreaMap {
+	for _, rows := range guard.Map.Contents {
 		for _, cols := range rows {
 			if string(cols) == "X" {
 				distinctGuardPositions += 1

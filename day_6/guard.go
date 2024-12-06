@@ -21,7 +21,7 @@ var guardFrames = [4]rune{
 type Guard struct {
 	CurrentDirection int
 	CurrentPosition  [2]int
-	AreaMap          [][]rune
+	Map              AreaMap
 }
 
 func (g *Guard) GetCurrentPosition() (int, int) {
@@ -38,23 +38,23 @@ func (g *Guard) GetNextPosition() (int, int) {
 
 func (g *Guard) SetPosition(x, y int) {
 	g.CurrentPosition = [2]int{x, y}
-	g.AreaMap[x][y] = guardFrames[g.CurrentDirection]
+	g.Map.Contents[x][y] = guardFrames[g.CurrentDirection]
 }
 
 func (g *Guard) MarkPositionVisited() {
 	x, y := g.GetCurrentPosition()
-	g.AreaMap[x][y] = rune(int('X'))
+	g.Map.Contents[x][y] = rune(int('X'))
 }
 
 func (g *Guard) GetMapSize() (int, int) {
-	width := len(g.AreaMap)
-	height := len(g.AreaMap[0])
+	width := len(g.Map.Contents)
+	height := len(g.Map.Contents[0])
 
 	return width, height
 }
 
 func (g *Guard) DrawMap() {
-	for _, j := range g.AreaMap {
+	for _, j := range g.Map.Contents {
 		for _, k := range j {
 			fmt.Printf("%v", string(k))
 		}
@@ -63,7 +63,7 @@ func (g *Guard) DrawMap() {
 }
 
 func (g *Guard) MapPositionIsOccupied(mapX, mapY int) bool {
-	return g.AreaMap[mapX][mapY] == rune(int('#'))
+	return g.Map.Contents[mapX][mapY] == rune(int('#'))
 }
 
 func (g *Guard) ChangeDirection() {
@@ -102,7 +102,7 @@ func (g *Guard) ExitedArea() bool {
 	posX := g.CurrentPosition[0]
 	posY := g.CurrentPosition[1]
 
-	if posX == len(g.AreaMap)-1 || posY == len((g.AreaMap[0]))-1 {
+	if posX == len(g.Map.Contents)-1 || posY == len((g.Map.Contents[0]))-1 {
 		g.MarkPositionVisited()
 		return true
 	}

@@ -2,8 +2,15 @@ package main
 
 import (
 	"bufio"
-	"log"
+	"fmt"
 	"os"
+)
+
+const (
+	Up int = iota
+	Right
+	Down
+	Left
 )
 
 func getAreaMapFromInput(filename string) ([][]rune, [2]int) {
@@ -33,8 +40,27 @@ func getAreaMapFromInput(filename string) ([][]rune, [2]int) {
 
 func main() {
 	areaMap, startPos := getAreaMapFromInput("input.txt")
-	log.Printf("Start position: %v", startPos)
-	for _, v := range areaMap {
-		log.Println(string(v))
+	fmt.Printf("Guard starting position: %v\n", startPos)
+
+	guard := Guard{
+		CurrentDirection: Up,
+		CurrentPosition:  startPos,
+		AreaMap:          areaMap,
 	}
+
+	for !guard.ExitedArea() {
+		guard.Move()
+	}
+
+	distinctGuardPositions := 0
+	for _, rows := range guard.AreaMap {
+		for _, cols := range rows {
+			if string(cols) == "X" {
+				distinctGuardPositions += 1
+			}
+		}
+	}
+
+	guard.DrawMap()
+	fmt.Printf("The guard visited %v distinct positions.\n", distinctGuardPositions)
 }

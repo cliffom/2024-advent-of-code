@@ -61,6 +61,5 @@ func main() {
 		}
 	}
 
-	guard.DrawMap()
 	fmt.Printf("The guard visited %v distinct positions.\n", distinctGuardPositions)
 }

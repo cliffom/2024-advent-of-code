@@ -1,9 +1,5 @@
 package main
 
-import (
-	"fmt"
-)
-
 var coordinates = [4][2]int{
 	{-1, 0}, // Up
 	{0, 1},  // Right
@@ -24,46 +20,23 @@ type Guard struct {
 	Map              AreaMap
 }
 
-func (g *Guard) GetCurrentPosition() (int, int) {
-	return g.CurrentPosition[0], g.CurrentPosition[1]
+func (g *Guard) GetCurrentPosition() [2]int {
+	return [2]int{g.CurrentPosition[0], g.CurrentPosition[1]}
 }
 
-func (g *Guard) GetNextPosition() (int, int) {
-	posX, posY := g.GetCurrentPosition()
-	nextX := posX + coordinates[g.CurrentDirection][0]
-	nextY := posY + coordinates[g.CurrentDirection][1]
+func (g *Guard) GetNextPosition() [2]int {
+	position := g.GetCurrentPosition()
+	x := position[0] + coordinates[g.CurrentDirection][0]
+	y := position[1] + coordinates[g.CurrentDirection][1]
 
-	return nextX, nextY
+	return [2]int{x, y}
 }
 
-func (g *Guard) SetPosition(x, y int) {
+func (g *Guard) SetPosition(position [2]int) {
+	x := position[0]
+	y := position[1]
 	g.CurrentPosition = [2]int{x, y}
-	g.Map.Contents[x][y] = guardFrames[g.CurrentDirection]
-}
-
-func (g *Guard) MarkPositionVisited() {
-	x, y := g.GetCurrentPosition()
-	g.Map.Contents[x][y] = rune(int('X'))
-}
-
-func (g *Guard) GetMapSize() (int, int) {
-	width := len(g.Map.Contents)
-	height := len(g.Map.Contents[0])
-
-	return width, height
-}
-
-func (g *Guard) DrawMap() {
-	for _, j := range g.Map.Contents {
-		for _, k := range j {
-			fmt.Printf("%v", string(k))
-		}
-		fmt.Printf("\n")
-	}
-}
-
-func (g *Guard) MapPositionIsOccupied(mapX, mapY int) bool {
-	return g.Map.Contents[mapX][mapY] == rune(int('#'))
+	g.Map.SetContentsAtPosition(g.CurrentPosition, guardFrames[g.CurrentDirection])
 }
 
 func (g *Guard) ChangeDirection() {
@@ -74,38 +47,35 @@ func (g *Guard) ChangeDirection() {
 }
 
 func (g *Guard) Move() {
-	nextX, nextY := g.GetNextPosition()
-	mapWidth, mapHeight := g.GetMapSize()
+	position := g.GetCurrentPosition()
+	nextPosition := g.GetNextPosition()
 
-	g.MarkPositionVisited()
+	g.Map.MarkPositionVisited(position)
 
-	// check inner bounds
-	if nextX < 0 || nextY < 0 {
-		return
-	}
-
-	// check  outer bounds
-	if nextX >= mapWidth || nextY >= mapHeight {
+	if g.Map.PositionIsOutOfBounds(position) {
 		return
 	}
 
 	// check for obstacle
-	if g.MapPositionIsOccupied(nextX, nextY) {
+	if g.Map.PositionIsOccupied(nextPosition) {
 		g.ChangeDirection()
 		return
 	}
 
-	g.SetPosition(nextX, nextY)
+	g.SetPosition(nextPosition)
 }
 
-func (g *Guard) ExitedArea() bool {
-	posX := g.CurrentPosition[0]
-	posY := g.CurrentPosition[1]
+func (g *Guard) InArea() bool {
+	position := g.GetCurrentPosition()
+	dimensions := g.Map.Dimensions()
 
-	if posX == len(g.Map.Contents)-1 || posY == len((g.Map.Contents[0]))-1 {
-		g.MarkPositionVisited()
-		return true
+	x := position[0]
+	y := position[1]
+
+	if x == dimensions[0]-1 || y == dimensions[1]-1 {
+		g.Map.MarkPositionVisited(position)
+		return false
 	}
 
-	return false
+	return true
 }

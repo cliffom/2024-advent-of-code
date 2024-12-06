@@ -50,7 +50,7 @@ func main() {
 		},
 	}
 
-	for !guard.ExitedArea() {
+	for guard.InArea() {
 		guard.Move()
 	}
 
@@ -63,5 +63,6 @@ func main() {
 		}
 	}
 
+	guard.Map.Draw()
 	fmt.Printf("The guard visited %v distinct positions.\n", distinctGuardPositions)
 }

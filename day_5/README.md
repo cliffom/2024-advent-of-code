@@ -1,4 +1,4 @@
-[Day 5: ](https://adventofcode.com/2024/day/5)
+[Day 5: Print Queue](https://adventofcode.com/2024/day/5)
 
 ```bash
 $ go run main.go

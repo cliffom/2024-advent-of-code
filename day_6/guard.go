@@ -74,14 +74,14 @@ func (g *Guard) Move() {
 	g.SetPosition(nextPosition)
 }
 
-func (g *Guard) InArea() bool {
+// InMapArea checks to see if a guard made it to the edge of a map
+// We only concern about the outer edges of a map and not beyond
+// since if a guard makes it to the edge of a map, they will make it
+// to the next area
+func (g *Guard) InMapArea() bool {
 	position := g.GetCurrentPosition()
-	dimensions := g.Map.Dimensions()
 
-	x := position[0]
-	y := position[1]
-
-	if x == dimensions[0]-1 || y == dimensions[1]-1 {
+	if g.Map.PositionIsOnBorder(position) {
 		g.Map.MarkPositionVisited(position)
 		return false
 	}

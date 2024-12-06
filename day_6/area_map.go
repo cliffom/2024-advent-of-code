@@ -7,7 +7,7 @@ type AreaMap struct {
 }
 
 func (m *AreaMap) Dimensions() [2]int {
-	return [2]int{len(m.Contents), len(m.Contents[0])}
+	return [2]int{len(m.Contents) - 1, len(m.Contents[0]) - 1}
 }
 
 func (m *AreaMap) Draw() {
@@ -23,11 +23,22 @@ func (m *AreaMap) PositionIsOutOfBounds(postion [2]int) bool {
 	x := postion[0]
 	y := postion[1]
 
-	if (x < 0 || y < 0) && (x > m.Dimensions()[0] || y > m.Dimensions()[1]) {
+	if x < 0 || y < 0 || x > m.Dimensions()[0] || y > m.Dimensions()[1] {
 		return true
 	}
 
 	return false
+}
+
+func (m *AreaMap) PositionIsOnBorder(position [2]int) bool {
+	dimensions := m.Dimensions()
+	x := position[0]
+	y := position[1]
+	width := dimensions[0]
+	height := dimensions[1]
+
+	return x == 0 || y == 0 || x == width || y == height
+
 }
 
 func (m *AreaMap) PositionIsOccupied(position [2]int) bool {

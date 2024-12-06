@@ -50,7 +50,7 @@ func main() {
 		},
 	}
 
-	for guard.InArea() {
+	for guard.InMapArea() {
 		guard.Move()
 	}
 

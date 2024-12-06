@@ -67,25 +67,30 @@ func main() {
 }
 
 func validateUpdate(update []int, orderingRules [][2]int) bool {
-	updateLen := len(update)
-	var updateIsValid bool
-	for i, page := range update {
-		if i+1 < updateLen {
-			ruleToValidate := [2]int{page, update[i+1]}
-			for _, rule := range orderingRules {
-				if ruleToValidate == rule {
-					updateIsValid = true
-					break
-				}
-				updateIsValid = false
-			}
-			if !updateIsValid {
+	var validate func(index int) bool
+
+	validate = func(index int) bool {
+		if index >= len(update)-1 {
+			return true
+		}
+
+		ruleToValidate := [2]int{update[index], update[index+1]}
+		isValid := false
+		for _, rule := range orderingRules {
+			if ruleToValidate == rule {
+				isValid = true
 				break
 			}
 		}
+
+		if !isValid {
+			return false
+		}
+
+		return validate(index + 1)
 	}
 
-	return updateIsValid
+	return validate(0)
 }
 
 func correctInvalidUpdate(update []int, orderingRules [][2]int) []int {

@@ -31,7 +31,8 @@ func (g *Guard) CurrentFrame() rune {
 }
 
 func (g *Guard) GetCurrentPosition() [2]int {
-	return [2]int{g.CurrentPosition[0], g.CurrentPosition[1]}
+	x, y := g.CurrentPosition[0], g.CurrentPosition[1]
+	return [2]int{x, y}
 }
 
 func (g *Guard) GetNextPosition() [2]int {
@@ -42,8 +43,7 @@ func (g *Guard) GetNextPosition() [2]int {
 }
 
 func (g *Guard) SetPosition(position [2]int) {
-	x := position[0]
-	y := position[1]
+	x, y := position[0], position[1]
 	g.CurrentPosition = [2]int{x, y}
 	g.Map.SetContentsAtPosition(g.CurrentPosition, g.CurrentFrame())
 }
@@ -61,7 +61,7 @@ func (g *Guard) Move() {
 
 	g.Map.MarkPositionVisited(position)
 
-	if g.Map.PositionIsOutOfBounds(position) {
+	if g.Map.PositionIsOutOfBounds(nextPosition) {
 		return
 	}
 

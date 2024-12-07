@@ -1,6 +1,12 @@
 package main
 
-const guardMovementDirections = 4
+const (
+	guardMovementDirections = 4
+	upRune                  = '^'
+	rightRune               = '>'
+	downRune                = 'v'
+	leftRune                = '<'
+)
 
 type Position struct {
 	X, Y      int
@@ -27,10 +33,10 @@ func (g *Guard) MovementModifier() [2]int {
 
 func (g *Guard) CurrentFrame() rune {
 	guardFrames := [guardMovementDirections]rune{
-		rune(int('^')), // Up
-		rune(int('>')), // Right
-		rune(int('v')), // Down
-		rune(int('<')), // Left
+		upRune,
+		rightRune,
+		downRune,
+		leftRune,
 	}
 
 	return guardFrames[g.CurrentDirection]
@@ -76,10 +82,19 @@ func (g *Guard) Move() {
 		return
 	}
 
-	g.Positions[Position{X: position[0], Y: position[1], Direction: g.CurrentDirection}] = true
-	g.Map.MarkPositionVisited(position)
+	g.MarkPositionVisited(position)
 	g.SetPosition(nextPosition)
+}
 
+func (g *Guard) MarkPositionVisited(position [2]int) {
+	pos := Position{
+		X:         position[0],
+		Y:         position[1],
+		Direction: g.CurrentDirection,
+	}
+
+	g.Positions[pos] = true
+	g.Map.MarkPositionVisited(position)
 }
 
 // InMapArea checks to see if a guard made it to the edge of a map

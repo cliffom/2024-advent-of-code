@@ -13,7 +13,11 @@ const (
 	Left
 )
 
-const startingRune = "^"
+const (
+	startingRune = "^"
+	obstacleRune = '#'
+	occupiedRune = 'X'
+)
 
 func getAreaMapFromInput(filename string) (AreaMap, [2]int) {
 	file, _ := os.Open(filename)
@@ -40,6 +44,47 @@ func getAreaMapFromInput(filename string) (AreaMap, [2]int) {
 	return AreaMap{Contents: areaMap}, startPos
 }
 
+// checkForLoopCausingObstacles looks at the map of a guards path
+// and checks to see how many obstacles can be placed to put the guard
+// on a path that results in a loop
+// I know this is ugly and a brute force attempt. Don't @me
+func checkForLoopCausingObstacles(pathMap AreaMap) int {
+	areaMap, startPos := getAreaMapFromInput("input.txt")
+	loopCounter := 0
+
+	for x := 0; x <= areaMap.Dimensions()[0]; x++ {
+		for y := 0; y <= areaMap.Dimensions()[1]; y++ {
+			pos := [2]int{x, y}
+			currentCellContents := areaMap.ContentsAtPosition(pos)
+			cellOnPath := pathMap.ContentsAtPosition(pos) == occupiedRune
+
+			if cellOnPath {
+				areaMap.SetContentsAtPosition(pos, obstacleRune)
+
+				guard := Guard{
+					CurrentDirection: Up,
+					CurrentPosition:  startPos,
+					Map:              areaMap,
+					Positions:        make(map[Position]bool),
+				}
+
+				for guard.InMapArea() {
+					if guard.CheckForLoop() {
+						loopCounter += 1
+						break
+					}
+					guard.Move()
+				}
+
+				// reset map
+				areaMap.SetContentsAtPosition(pos, currentCellContents)
+			}
+		}
+	}
+
+	return loopCounter
+}
+
 func main() {
 	areaMap, startPos := getAreaMapFromInput("input.txt")
 	fmt.Printf("Guard starting position: %v\n", startPos)
@@ -55,30 +100,8 @@ func main() {
 		guard.Move()
 	}
 
+	possibleLoopCausingObstacles := checkForLoopCausingObstacles(guard.Map)
+
 	fmt.Printf("The guard visited %v distinct positions.\n", guard.Map.DistinctPositionsVisited())
-
-	// I know the following is ugly but it is late and I am tired. It worked.
-	loopCounter := 0
-	for i := 0; i <= areaMap.Dimensions()[0]; i++ {
-		for j := 0; j <= areaMap.Dimensions()[1]; j++ {
-			areaMap2, startPos2 := getAreaMapFromInput("input.txt")
-			areaMap2.SetContentsAtPosition([2]int{i, j}, rune(int('#')))
-			guard2 := Guard{
-				CurrentDirection: Up,
-				CurrentPosition:  startPos2,
-				Map:              areaMap2,
-				Positions:        make(map[Position]bool),
-			}
-
-			for guard2.InMapArea() {
-				if guard2.CheckForLoop() {
-					loopCounter += 1
-					break
-				}
-				guard2.Move()
-			}
-		}
-	}
-
-	fmt.Printf("%v obstacles can be placed to create a loop.\n", loopCounter)
+	fmt.Printf("%v obstacles can be placed to create a loop.\n", possibleLoopCausingObstacles)
 }

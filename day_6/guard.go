@@ -59,8 +59,6 @@ func (g *Guard) Move() {
 	position := g.GetCurrentPosition()
 	nextPosition := g.GetNextPosition()
 
-	g.Map.MarkPositionVisited(position)
-
 	if g.Map.PositionIsOutOfBounds(nextPosition) {
 		return
 	}
@@ -71,6 +69,7 @@ func (g *Guard) Move() {
 		return
 	}
 
+	g.Map.MarkPositionVisited(position)
 	g.SetPosition(nextPosition)
 }
 

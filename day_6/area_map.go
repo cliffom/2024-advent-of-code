@@ -64,3 +64,16 @@ func (m *AreaMap) MarkPositionVisited(position [2]int) {
 
 	m.SetContentsAtPosition([2]int{x, y}, rune(int('X')))
 }
+
+func (m *AreaMap) DistinctPositionsVisited() int {
+	count := 0
+	for _, rows := range m.Contents {
+		for _, cols := range rows {
+			if string(cols) == "X" {
+				count += 1
+			}
+		}
+	}
+
+	return count
+}

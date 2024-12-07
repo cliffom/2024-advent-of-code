@@ -54,15 +54,6 @@ func main() {
 		guard.Move()
 	}
 
-	distinctGuardPositions := 0
-	for _, rows := range guard.Map.Contents {
-		for _, cols := range rows {
-			if string(cols) == "X" {
-				distinctGuardPositions += 1
-			}
-		}
-	}
-
 	guard.Map.Draw()
-	fmt.Printf("The guard visited %v distinct positions.\n", distinctGuardPositions)
+	fmt.Printf("The guard visited %v distinct positions.\n", guard.Map.DistinctPositionsVisited())
 }

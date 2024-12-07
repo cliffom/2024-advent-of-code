@@ -1,13 +1,5 @@
 package main
 
-const (
-	guardMovementDirections = 4
-	upRune                  = '^'
-	rightRune               = '>'
-	downRune                = 'v'
-	leftRune                = '<'
-)
-
 type Position struct {
 	X, Y      int
 	Direction int // "up", "right", "down", "left"
@@ -21,7 +13,7 @@ type Guard struct {
 }
 
 func (g *Guard) MovementModifier() [2]int {
-	coordinates := [guardMovementDirections][2]int{
+	coordinates := [MOVEMENT_DIRECTIONS][2]int{
 		{-1, 0}, // Up
 		{0, 1},  // Right
 		{1, 0},  // Down
@@ -32,11 +24,11 @@ func (g *Guard) MovementModifier() [2]int {
 }
 
 func (g *Guard) CurrentFrame() rune {
-	guardFrames := [guardMovementDirections]rune{
-		upRune,
-		rightRune,
-		downRune,
-		leftRune,
+	guardFrames := [MOVEMENT_DIRECTIONS]rune{
+		UP_RUNE,
+		RIGHT_RUNE,
+		DOWN_RUNE,
+		LEFT_RUNE,
 	}
 
 	return guardFrames[g.CurrentDirection]
@@ -63,8 +55,8 @@ func (g *Guard) SetPosition(position [2]int) {
 
 func (g *Guard) ChangeDirection() {
 	g.CurrentDirection += 1
-	if g.CurrentDirection >= guardMovementDirections {
-		g.CurrentDirection = 0
+	if g.CurrentDirection >= MOVEMENT_DIRECTIONS {
+		g.CurrentDirection = UP
 	}
 }
 

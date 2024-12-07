@@ -8,15 +8,22 @@ import (
 )
 
 const (
-	Up int = iota
-	Right
-	Down
-	Left
+	MOVEMENT_DIRECTIONS = 4
+
+	// Runes
+	OBSTACLE_RUNE = '#'
+	OCCUPIED_RUNE = 'X'
+	UP_RUNE       = '^'
+	RIGHT_RUNE    = '>'
+	DOWN_RUNE     = 'v'
+	LEFT_RUNE     = '<'
 )
 
 const (
-	obstacleRune = '#'
-	occupiedRune = 'X'
+	UP int = iota
+	RIGHT
+	DOWN
+	LEFT
 )
 
 const (
@@ -39,7 +46,7 @@ func getAreaMapFromInput(filename string) (AreaMap, [2]int) {
 
 		if startPos == [2]int{0, 0} {
 			for col, char := range runes {
-				if char == upRune {
+				if char == UP_RUNE {
 					startPos = [2]int{row, col}
 				}
 			}
@@ -60,14 +67,14 @@ func checkForLoopCausingObstacles(pathMap AreaMap) int {
 	for x := 0; x <= areaMap.Dimensions()[0]; x++ {
 		for y := 0; y <= areaMap.Dimensions()[1]; y++ {
 			pos := [2]int{x, y}
-			cellOnPath := pathMap.ContentsAtPosition(pos) == occupiedRune
+			cellOnPath := pathMap.ContentsAtPosition(pos) == OCCUPIED_RUNE
 
 			if cellOnPath {
 				currentCellContents := areaMap.ContentsAtPosition(pos)
-				areaMap.SetContentsAtPosition(pos, obstacleRune)
+				areaMap.SetContentsAtPosition(pos, OBSTACLE_RUNE)
 
 				guard := Guard{
-					CurrentDirection: Up,
+					CurrentDirection: UP,
 					CurrentPosition:  startPos,
 					Map:              areaMap,
 					Positions:        make(map[Position]bool),
@@ -95,7 +102,7 @@ func main() {
 	fmt.Printf("Guard starting position: %v\n", startPos)
 
 	guard := Guard{
-		CurrentDirection: Up,
+		CurrentDirection: UP,
 		CurrentPosition:  startPos,
 		Map:              areaMap,
 		Positions:        make(map[Position]bool),

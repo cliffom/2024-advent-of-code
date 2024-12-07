@@ -15,7 +15,6 @@ const (
 )
 
 const (
-	startingRune = "^"
 	obstacleRune = '#'
 	occupiedRune = 'X'
 )
@@ -40,7 +39,7 @@ func getAreaMapFromInput(filename string) (AreaMap, [2]int) {
 
 		if startPos == [2]int{0, 0} {
 			for col, char := range runes {
-				if string(char) == startingRune {
+				if char == upRune {
 					startPos = [2]int{row, col}
 				}
 			}

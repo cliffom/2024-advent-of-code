@@ -55,10 +55,10 @@ func checkForLoopCausingObstacles(pathMap AreaMap) int {
 	for x := 0; x <= areaMap.Dimensions()[0]; x++ {
 		for y := 0; y <= areaMap.Dimensions()[1]; y++ {
 			pos := [2]int{x, y}
-			currentCellContents := areaMap.ContentsAtPosition(pos)
 			cellOnPath := pathMap.ContentsAtPosition(pos) == occupiedRune
 
 			if cellOnPath {
+				currentCellContents := areaMap.ContentsAtPosition(pos)
 				areaMap.SetContentsAtPosition(pos, obstacleRune)
 
 				guard := Guard{

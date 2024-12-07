@@ -112,9 +112,17 @@ func (g *Guard) InMapArea() bool {
 	return true
 }
 
+// CheckForLoop determines if the guard is in a loop, meaning
+// we've already moved the same direction through a given cell
 func (g *Guard) CheckForLoop() bool {
-	position := g.GetCurrentPosition()
-	if (g.Positions[Position{X: position[0], Y: position[1], Direction: g.CurrentDirection}]) {
+	currentPosition := g.GetCurrentPosition()
+	position := Position{
+		X:         currentPosition[0],
+		Y:         currentPosition[1],
+		Direction: g.CurrentDirection,
+	}
+
+	if g.Positions[position] {
 		return true
 	}
 

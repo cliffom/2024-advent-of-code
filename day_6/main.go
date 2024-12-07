@@ -21,20 +21,20 @@ func getAreaMapFromInput(filename string) (AreaMap, [2]int) {
 
 	var areaMap [][]rune
 	var startPos [2]int
-
 	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
+
+	for row := 0; scanner.Scan(); row++ {
 		line := scanner.Text()
-		runes := make([]rune, 0)
+		runes := []rune(line)
 		areaMap = append(areaMap, runes)
-		areaMapSize := len(areaMap) - 1
-		for i, char := range line {
-			areaMap[areaMapSize] = append(areaMap[areaMapSize], char)
-			if string(char) == startingRune {
-				startPos = [2]int{areaMapSize, i}
+
+		if startPos == [2]int{0, 0} {
+			for col, char := range runes {
+				if string(char) == startingRune {
+					startPos = [2]int{row, col}
+				}
 			}
 		}
-
 	}
 
 	return AreaMap{Contents: areaMap}, startPos
@@ -54,6 +54,6 @@ func main() {
 		guard.Move()
 	}
 
-	guard.Map.Draw()
+	//guard.Map.Draw()
 	fmt.Printf("The guard visited %v distinct positions.\n", guard.Map.DistinctPositionsVisited())
 }

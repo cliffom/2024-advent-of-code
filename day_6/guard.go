@@ -36,8 +36,9 @@ func (g *Guard) GetCurrentPosition() [2]int {
 }
 
 func (g *Guard) GetNextPosition() [2]int {
-	position := g.GetCurrentPosition()
-	nextPosition := [2]int{position[0] + g.MovementModifier()[0], position[1] + g.MovementModifier()[1]}
+	x, y := g.CurrentPosition[0], g.CurrentPosition[1]
+	dX, dY := g.MovementModifier()[0], g.MovementModifier()[1]
+	nextPosition := [2]int{x + dX, y + dY}
 
 	return nextPosition
 }

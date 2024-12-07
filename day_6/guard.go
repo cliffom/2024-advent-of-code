@@ -62,28 +62,24 @@ func (g *Guard) ChangeDirection() {
 	}
 }
 
-func (g *Guard) Move() bool {
+func (g *Guard) Move() {
 	position := g.GetCurrentPosition()
 	nextPosition := g.GetNextPosition()
 
 	if g.Map.PositionIsOutOfBounds(nextPosition) {
-		return true
+		return
 	}
 
 	// check for obstacle
 	if g.Map.PositionIsOccupied(nextPosition) {
 		g.ChangeDirection()
-		return true
+		return
 	}
 
-	if (g.Positions[Position{X: position[0], Y: position[1], Direction: g.CurrentDirection}]) {
-		return false
-	} else {
-		g.Positions[Position{X: position[0], Y: position[1], Direction: g.CurrentDirection}] = true
-	}
+	g.Positions[Position{X: position[0], Y: position[1], Direction: g.CurrentDirection}] = true
 	g.Map.MarkPositionVisited(position)
 	g.SetPosition(nextPosition)
-	return true
+
 }
 
 // InMapArea checks to see if a guard made it to the edge of a map
@@ -99,4 +95,13 @@ func (g *Guard) InMapArea() bool {
 	}
 
 	return true
+}
+
+func (g *Guard) CheckForLoop() bool {
+	position := g.GetCurrentPosition()
+	if (g.Positions[Position{X: position[0], Y: position[1], Direction: g.CurrentDirection}]) {
+		return true
+	}
+
+	return false
 }

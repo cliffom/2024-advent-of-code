@@ -57,6 +57,7 @@ func main() {
 
 	fmt.Printf("The guard visited %v distinct positions.\n", guard.Map.DistinctPositionsVisited())
 
+	// I know the following is ugly but it is late and I am tired. It worked.
 	loopCounter := 0
 	for i := 0; i <= areaMap.Dimensions()[0]; i++ {
 		for j := 0; j <= areaMap.Dimensions()[1]; j++ {
@@ -70,10 +71,11 @@ func main() {
 			}
 
 			for guard2.InMapArea() {
-				if !guard2.Move() {
+				if guard2.CheckForLoop() {
 					loopCounter += 1
 					break
 				}
+				guard2.Move()
 			}
 		}
 	}

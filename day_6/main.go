@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 )
 
@@ -17,6 +18,11 @@ const (
 	startingRune = "^"
 	obstacleRune = '#'
 	occupiedRune = 'X'
+)
+
+const (
+	STATUS_SUCCESS int = iota
+	STATUS_GUARD_STUCK_IN_LOOP
 )
 
 func getAreaMapFromInput(filename string) (AreaMap, [2]int) {
@@ -98,6 +104,10 @@ func main() {
 
 	for guard.InMapArea() {
 		guard.Move()
+		if guard.CheckForLoop() {
+			log.Println("The current area has a looped path. Exiting.")
+			os.Exit(STATUS_GUARD_STUCK_IN_LOOP)
+		}
 	}
 
 	possibleLoopCausingObstacles := checkForLoopCausingObstacles(guard.Map)

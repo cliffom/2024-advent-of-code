@@ -2,7 +2,7 @@ package main
 
 type Position struct {
 	X, Y      int
-	Direction int // "up", "right", "down", "left"
+	Direction int
 }
 
 type Guard struct {
@@ -68,7 +68,6 @@ func (g *Guard) Move() {
 		return
 	}
 
-	// check for obstacle
 	if g.Map.PositionIsOccupied(nextPosition) {
 		g.ChangeDirection()
 		return

@@ -48,12 +48,35 @@ func main() {
 		CurrentDirection: Up,
 		CurrentPosition:  startPos,
 		Map:              areaMap,
+		Positions:        make(map[Position]bool),
 	}
 
 	for guard.InMapArea() {
 		guard.Move()
 	}
 
-	//guard.Map.Draw()
 	fmt.Printf("The guard visited %v distinct positions.\n", guard.Map.DistinctPositionsVisited())
+
+	loopCounter := 0
+	for i := 0; i <= areaMap.Dimensions()[0]; i++ {
+		for j := 0; j <= areaMap.Dimensions()[1]; j++ {
+			areaMap2, startPos2 := getAreaMapFromInput("input.txt")
+			areaMap2.SetContentsAtPosition([2]int{i, j}, rune(int('#')))
+			guard2 := Guard{
+				CurrentDirection: Up,
+				CurrentPosition:  startPos2,
+				Map:              areaMap2,
+				Positions:        make(map[Position]bool),
+			}
+
+			for guard2.InMapArea() {
+				if !guard2.Move() {
+					loopCounter += 1
+					break
+				}
+			}
+		}
+	}
+
+	fmt.Printf("%v obstacles can be placed to create a loop.\n", loopCounter)
 }

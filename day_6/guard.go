@@ -2,10 +2,16 @@ package main
 
 const guardMovementDirections = 4
 
+type Position struct {
+	X, Y      int
+	Direction int // "up", "right", "down", "left"
+}
+
 type Guard struct {
 	CurrentDirection int
 	CurrentPosition  [2]int
 	Map              AreaMap
+	Positions        map[Position]bool
 }
 
 func (g *Guard) MovementModifier() [2]int {
@@ -56,22 +62,28 @@ func (g *Guard) ChangeDirection() {
 	}
 }
 
-func (g *Guard) Move() {
+func (g *Guard) Move() bool {
 	position := g.GetCurrentPosition()
 	nextPosition := g.GetNextPosition()
 
 	if g.Map.PositionIsOutOfBounds(nextPosition) {
-		return
+		return true
 	}
 
 	// check for obstacle
 	if g.Map.PositionIsOccupied(nextPosition) {
 		g.ChangeDirection()
-		return
+		return true
 	}
 
+	if (g.Positions[Position{X: position[0], Y: position[1], Direction: g.CurrentDirection}]) {
+		return false
+	} else {
+		g.Positions[Position{X: position[0], Y: position[1], Direction: g.CurrentDirection}] = true
+	}
 	g.Map.MarkPositionVisited(position)
 	g.SetPosition(nextPosition)
+	return true
 }
 
 // InMapArea checks to see if a guard made it to the edge of a map

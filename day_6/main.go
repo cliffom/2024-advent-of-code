@@ -13,7 +13,9 @@ const (
 	Left
 )
 
-func getAreaMapFromInput(filename string) ([][]rune, [2]int) {
+const startingRune = "^"
+
+func getAreaMapFromInput(filename string) (AreaMap, [2]int) {
 	file, _ := os.Open(filename)
 	defer file.Close()
 
@@ -25,17 +27,17 @@ func getAreaMapFromInput(filename string) ([][]rune, [2]int) {
 		line := scanner.Text()
 		runes := make([]rune, 0)
 		areaMap = append(areaMap, runes)
-		areaMapSize := len(areaMap)
+		areaMapSize := len(areaMap) - 1
 		for i, char := range line {
-			areaMap[areaMapSize-1] = append(areaMap[areaMapSize-1], char)
-			if string(char) == "^" {
-				startPos = [2]int{areaMapSize - 1, i}
+			areaMap[areaMapSize] = append(areaMap[areaMapSize], char)
+			if string(char) == startingRune {
+				startPos = [2]int{areaMapSize, i}
 			}
 		}
 
 	}
 
-	return areaMap, startPos
+	return AreaMap{Contents: areaMap}, startPos
 }
 
 func main() {
@@ -45,9 +47,7 @@ func main() {
 	guard := Guard{
 		CurrentDirection: Up,
 		CurrentPosition:  startPos,
-		Map: AreaMap{
-			Contents: areaMap,
-		},
+		Map:              areaMap,
 	}
 
 	for guard.InMapArea() {

@@ -21,6 +21,7 @@ func getCalibrationEquationsFromInput(filename string) []string {
 
 func main() {
 	sum := 0
+	refinedSum := 0
 	calibrationEquations := getCalibrationEquationsFromInput("input.txt")
 
 	for _, calibrationEquation := range calibrationEquations {
@@ -29,10 +30,15 @@ func main() {
 			continue
 		}
 
-		if ce.IsValid() {
+		if ce.IsValid(false) {
 			sum += ce.Result
+		}
+
+		if ce.IsValid(true) {
+			refinedSum += ce.Result
 		}
 	}
 
 	fmt.Println("The sum of valid calibration results is:", sum)
+	fmt.Println("The sum of valid and refined calibration results is:", refinedSum)
 }

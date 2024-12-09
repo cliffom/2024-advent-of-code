@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -35,7 +36,7 @@ func (ce *CalibrationEquation) FromInputData(input string) bool {
 	return true
 }
 
-func (ce *CalibrationEquation) IsValid() bool {
+func (ce *CalibrationEquation) IsValid(allowConcatenationOperator bool) bool {
 	numberOfOperands := len(ce.Operands)
 
 	var search func(index, current int) bool
@@ -44,15 +45,30 @@ func (ce *CalibrationEquation) IsValid() bool {
 			return current == ce.Result
 		}
 
+		// addition
 		if search(index+1, current+ce.Operands[index]) {
 			return true
 		}
 
+		// multiplication
 		if search(index+1, current*ce.Operands[index]) {
 			return true
 		}
+
+		if allowConcatenationOperator {
+			// concatenation
+			if search(index+1, concatenate(current, ce.Operands[index])) {
+				return true
+			}
+		}
+
 		return false
 	}
 
 	return search(1, ce.Operands[0])
+}
+
+func concatenate(a, b int) int {
+	value, _ := strconv.Atoi(fmt.Sprintf("%d%d", a, b))
+	return value
 }
